@@ -1,31 +1,65 @@
 package ru.practicum.shareit.exceptions;
 
-import io.micrometer.core.instrument.config.validate.ValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
+@ControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException(NotFoundException e) {
-        return new ErrorResponse(e.getMessage());
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(Exception e) {
+        log.warn("Validation exception: {}", e.getMessage());
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ValidationException.class, IllegalArgumentException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequestExceptions(RuntimeException e) {
-        return new ErrorResponse(e.getMessage());
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNotFoundExceptions(Exception e) {
+        log.warn("Not found exception: {}", e.getMessage());
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailValidException(ValidException e) {
-        return new ErrorResponse(e.getMessage());
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.warn("Method argument not valid exception: {}", e.getMessage());
+        Map<String, String> errorResponse = new HashMap<>();
+        e.getBindingResult().getFieldErrors().forEach(error ->
+                errorResponse.put(error.getField(), error.getDefaultMessage()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    public record ErrorResponse(String error) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleGeneralExceptions(Exception e) {
+        log.error("General exception: {}", e.getMessage(), e);
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Internal server error");
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, String>> handleForbiddenExceptions(Exception e) {
+        log.warn("Forbidden exception: {}", e.getMessage());
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<Map<String, String>> handleInternalServerErrorExceptions(Exception e) {
+        log.error("Internal server error: {}", e.getMessage(), e);
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
