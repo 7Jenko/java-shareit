@@ -1,9 +1,8 @@
 name: ShareIt API Tests
+
 on:
   pull_request:
 
 jobs:
   build:
     uses: yandex-praktikum/java-shareit/.github/workflows/api-tests.yml@ci
-    secrets:
-      SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
