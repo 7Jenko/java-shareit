@@ -27,7 +27,6 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
-    private final ItemMapper itemMapper;
 
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) {
@@ -38,9 +37,9 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getDescription() == null || itemDto.getDescription().isBlank()) {
             throw new IllegalArgumentException("Description cannot be blank");
         }
-        Item item = itemMapper.toItem(itemDto, owner);
+        Item item = ItemMapper.toItem(itemDto, owner);
         item.setCreated(LocalDateTime.now());
-        return itemMapper.toItemDto(itemRepository.save(item));
+        return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
@@ -62,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getAvailable() != null) {
             item.setAvailable(itemDto.getAvailable());
         }
-        return itemMapper.toItemDto(itemRepository.save(item));
+        return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
@@ -78,7 +77,7 @@ public class ItemServiceImpl implements ItemService {
                 throw new NotFoundException("You are not authorized to view this item");
             }
         }
-        return itemMapper.toItemDto(item);
+        return ItemMapper.toItemDto(item);
     }
 
     @Override
@@ -127,10 +126,8 @@ public class ItemServiceImpl implements ItemService {
                 .orElse(null);
 
         ItemOwnerDto itemOwnerDto = ItemMapper.toItemOwnerDto(item, lastBookingDate, nextBookingDate);
-
         itemOwnerDto.setComments(commentRepository.findByItemId(item.getId())
                 .stream().map(CommentMapper::toRespondDto).toList());
-
         return itemOwnerDto;
     }
 }

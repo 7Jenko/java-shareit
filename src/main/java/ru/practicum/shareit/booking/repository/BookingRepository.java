@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -26,11 +27,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.booker = :user AND b.start > :date")
     List<Booking> findFutureByBooker(@Param("user") User user, @Param("date") LocalDateTime date);
 
-    @Query("SELECT b FROM Booking b WHERE b.booker = :user AND b.status = 'WAITING'")
-    List<Booking> findWaitingByBooker(@Param("user") User user);
-
-    @Query("SELECT b FROM Booking b WHERE b.booker = :user AND b.status = 'REJECTED'")
-    List<Booking> findRejectedByBooker(@Param("user") User user);
+    @Query("SELECT b FROM Booking b WHERE b.booker = :user AND b.status = :status")
+    List<Booking> findByBookerAndStatus(@Param("user") User user, @Param("status") BookingStatus status);
 
     @Query("SELECT b FROM Booking b WHERE b.item.owner = :owner AND b.start <= :date AND b.end >= :date")
     List<Booking> findCurrentByOwner(@Param("owner") User owner, @Param("date") LocalDateTime date);
@@ -41,11 +39,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.item.owner = :owner AND b.start > :date")
     List<Booking> findFutureByOwner(@Param("owner") User owner, @Param("date") LocalDateTime date);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.owner = :owner AND b.status = 'WAITING'")
-    List<Booking> findWaitingByOwner(@Param("owner") User owner);
-
-    @Query("SELECT b FROM Booking b WHERE b.item.owner = :owner AND b.status = 'REJECTED'")
-    List<Booking> findRejectedByOwner(@Param("owner") User owner);
+    @Query("SELECT b FROM Booking b WHERE b.item.owner = :owner AND b.status = :status")
+    List<Booking> findByOwnerAndStatus(@Param("owner") User owner, @Param("status") BookingStatus status);
 
     Optional<Booking> findByIdAndBookerId(Long bookingId, Long bookerId);
 

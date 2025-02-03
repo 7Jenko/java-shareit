@@ -24,7 +24,6 @@ public class CommentServiceImpl implements CommentService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
-    private final CommentMapper commentMapper;
 
     @Override
     public CommentDto addComment(Long userId, Long itemId, String text) {
