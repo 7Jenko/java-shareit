@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>shareit-gateway</artifactId>
+    <artifactId>shareit-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
