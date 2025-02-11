@@ -3,19 +3,19 @@ package ru.practicum.shareIt.controller;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.ShareItGateway;
 import ru.practicum.shareit.client.RequestClient;
+import ru.practicum.shareit.itemRequest.controller.RequestController;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = ShareItGateway.class)
+@WebMvcTest(RequestController.class)
 public class RequestControllerTest {
 
     @Autowired
@@ -26,10 +26,12 @@ public class RequestControllerTest {
 
     @Test
     public void testCreateRequest() throws Exception {
+        // Подготовка данных
         String requestBody = "{\"description\":\"Need a drill\"}";
         Mockito.when(requestClient.createRequest(anyLong(), any()))
                 .thenReturn("{\"id\":1,\"description\":\"Need a drill\"}");
 
+        // Вызов эндпоинта и проверка результата
         mockMvc.perform(post("/requests")
                         .header("X-Sharer-User-Id", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -41,9 +43,11 @@ public class RequestControllerTest {
 
     @Test
     public void testGetUserRequests() throws Exception {
+        // Подготовка данных
         Mockito.when(requestClient.getUserRequests(anyLong()))
                 .thenReturn("[{\"id\":1,\"description\":\"Need a drill\"}]");
 
+        // Вызов эндпоинта и проверка результата
         mockMvc.perform(get("/requests")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
@@ -53,9 +57,11 @@ public class RequestControllerTest {
 
     @Test
     public void testGetAllRequests() throws Exception {
+        // Подготовка данных
         Mockito.when(requestClient.getAllRequests(anyLong(), anyInt(), anyInt()))
                 .thenReturn("[{\"id\":1,\"description\":\"Need a drill\"}]");
 
+        // Вызов эндпоинта и проверка результата
         mockMvc.perform(get("/requests/all")
                         .header("X-Sharer-User-Id", 1L)
                         .param("from", "0")
@@ -67,9 +73,11 @@ public class RequestControllerTest {
 
     @Test
     public void testGetRequestById() throws Exception {
+        // Подготовка данных
         Mockito.when(requestClient.getRequestById(anyLong(), anyLong()))
                 .thenReturn("{\"id\":1,\"description\":\"Need a drill\"}");
 
+        // Вызов эндпоинта и проверка результата
         mockMvc.perform(get("/requests/1")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
