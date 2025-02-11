@@ -1,4 +1,4 @@
-package dtoTests;
+package ru.practicum.shareIt.dtoTest;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.test.context.ContextConfiguration;
-import ru.practicum.shareit.itemRequest.dto.ItemRequestDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.Set;
 
@@ -18,40 +18,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @JsonTest
-@ContextConfiguration(classes = ItemRequestDtoTest.class)
-public class ItemRequestDtoTest {
+@ContextConfiguration(classes = ItemDtoTest.class)
+public class ItemDtoTest {
 
     @Autowired
-    private JacksonTester<ItemRequestDto> json;
+    private JacksonTester<ItemDto> json;
 
     @Test
     public void testSerialize() throws Exception {
-        ItemRequestDto requestDto = new ItemRequestDto();
-        requestDto.setDescription("Need a drill");
+        ItemDto itemDto = new ItemDto(1L, "Drill", "Powerful drill", true, null, null);
 
-        assertThat(json.write(requestDto))
+        assertThat(json.write(itemDto))
+                .hasJsonPathNumberValue("$.id")
+                .hasJsonPathStringValue("$.name")
                 .hasJsonPathStringValue("$.description")
-                .extractingJsonPathStringValue("$.description").isEqualTo("Need a drill");
+                .hasJsonPathBooleanValue("$.available");
     }
 
     @Test
     public void testDeserialize() throws Exception {
-        String content = "{\"description\":\"Need a drill\"}";
+        String content = "{\"id\":1,\"name\":\"Drill\",\"description\":\"Powerful drill\",\"available\":true}";
 
         assertThat(json.parse(content))
-                .isEqualTo(new ItemRequestDto("Need a drill"));
+                .isEqualTo(new ItemDto(1L, "Drill", "Powerful drill", true, null, null));
     }
 
     @Test
     public void testValidation() {
-        ItemRequestDto requestDto = new ItemRequestDto();
-        requestDto.setDescription("");
+        ItemDto itemDto = new ItemDto();
+        itemDto.setName("");
+        itemDto.setDescription("");
+        itemDto.setAvailable(null);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<ItemRequestDto>> violations = validator.validate(requestDto);
+        Set<ConstraintViolation<ItemDto>> violations = validator.validate(itemDto);
 
         assertFalse(violations.isEmpty());
-        assertEquals("Описание запроса не может быть пустым", violations.iterator().next().getMessage());
+        assertEquals(3, violations.size());
     }
 }

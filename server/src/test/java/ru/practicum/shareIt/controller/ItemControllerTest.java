@@ -1,4 +1,4 @@
-package practicum.shareit.controller;
+package ru.practicum.shareIt.controller;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
