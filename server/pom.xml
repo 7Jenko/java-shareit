@@ -71,7 +71,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
     </dependencies>
 
@@ -255,9 +255,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <configuration>
-                            <configLocation>checkstyle.xml</configLocation>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
