@@ -3,11 +3,12 @@ package ru.practicum.shareIt.controller;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.ShareItGateway;
+import ru.practicum.shareit.booking.controller.BookingController;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.client.BookingClient;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,7 +17,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = ShareItGateway.class)
+@ContextConfiguration(classes = {BookingController.class, BookingClient.class})
+@WebAppConfiguration
 public class BookingControllerTest {
 
     @Autowired
