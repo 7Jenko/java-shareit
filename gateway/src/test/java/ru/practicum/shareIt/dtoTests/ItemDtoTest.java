@@ -13,11 +13,13 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.springframework.test.context.ContextConfiguration;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.Set;
 
 @JsonTest
+@ContextConfiguration(classes = ItemDtoTest.class)
 public class ItemDtoTest {
 
     @Autowired

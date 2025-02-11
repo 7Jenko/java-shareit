@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.test.context.ContextConfiguration;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
 
 import java.time.LocalDateTime;
 
 @JsonTest
+@ContextConfiguration(classes = ItemOwnerDtoTest.class)
 public class ItemOwnerDtoTest {
 
     @Autowired
