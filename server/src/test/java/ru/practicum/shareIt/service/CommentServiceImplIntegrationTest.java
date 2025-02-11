@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.ShareItServer;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.comment.service.CommentServiceImpl;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ContextConfiguration(classes = {ShareItServer.class})
 @Transactional
 @Rollback
 public class CommentServiceImplIntegrationTest {
@@ -41,7 +44,6 @@ public class CommentServiceImplIntegrationTest {
 
     @Test
     public void testAddComment() {
-        // Подготовка данных
         UserDto userDto = new UserDto();
         userDto.setName("John Doe");
         userDto.setEmail("john@example.com");
