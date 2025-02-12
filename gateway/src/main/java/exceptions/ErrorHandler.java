@@ -64,14 +64,6 @@ public class ErrorHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(InternalServerErrorException.class)
-    public ResponseEntity<Map<String, String>> handleInternalServerErrorExceptions(Exception e) {
-        log.error("Internal server error: {}", e.getMessage(), e);
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", e.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<Map<String, String>> handleWebClientResponseException(WebClientResponseException e) {
         log.error("WebClient error: {}", e.getResponseBodyAsString());

@@ -22,16 +22,8 @@ public class BookingController {
 	@PostMapping
 	public ResponseEntity<?> createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
 										   @Valid @RequestBody BookingRequestDto bookingRequestDto) {
-		try {
-			Object response = bookingClient.createBooking(userId, bookingRequestDto);
-			return ResponseEntity.ok(response);
-		} catch (NotFoundException e) {
-			log.error("Item not found: {}", e.getMessage());
-			return ResponseEntity.notFound().build();
-		} catch (RuntimeException e) {
-			log.error("Server error: {}", e.getMessage());
-			return ResponseEntity.internalServerError().build();
-		}
+		Object response = bookingClient.createBooking(userId, bookingRequestDto);
+		return ResponseEntity.ok(response);
 	}
 
 	@PatchMapping("/{bookingId}")
